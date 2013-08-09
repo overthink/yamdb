@@ -13,5 +13,5 @@ TODO
 
 Copyright © 2013 Mark Feeney
 
-Distributed under the [http://opensource.org/licenses/MIT MIT License].
+Distributed under the [MIT License](http://opensource.org/licenses/MIT).
 
