@@ -11,13 +11,6 @@
 
 (set! *warn-on-reflection* true)
 
-;;(defroutes main-routes
-;;  (GET "/" [] "Hey now")
-;;  (not-found "Not found"))
-;;
-;;(def app
-;;  (-> (site main-routes)))
-
 (defonce server (ref nil))
 
 (defn config-server
@@ -50,7 +43,7 @@
 
 (defn -main [& args]
   ; start the server and block forever
-  (start-server :join true)
+  (start-server web/app :join true)
   (println "bye"))
 
 (comment
