@@ -1,7 +1,7 @@
 (ns yamdb.web
   "Routes, handlers, and web app definition."
   (:require
-    [net.cgrand.enlive-html :refer [html-resource emit*]]
+    [net.cgrand.enlive-html :as html :refer [html-resource emit* deftemplate defsnippet]]
     [compojure.core :refer [defroutes GET]]
     [compojure.route :refer [not-found resources]]
     [compojure.handler :refer [site]]))
@@ -17,3 +17,17 @@
 (def app
   (-> (site main-routes)))
 
+
+(comment
+
+  (get-home)
+
+  (deftemplate t1 (html-resource "templates/index.html")
+    [title]
+    [:h1] (html/content title)
+    [:title] (html/content (str "title is: " title)))
+
+  (t1 "foo?")
+
+
+)

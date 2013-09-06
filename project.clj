@@ -3,6 +3,7 @@
   :license {:name "MIT License"
             :url "http://opensource.org/licenses/MIT"}
   :dependencies [[org.clojure/clojure "1.5.1"]
+                 [org.clojure/tools.nrepl "0.2.3"]
                  [compojure "1.1.5"]
                  [enlive "1.1.1"]
                  [ring "1.1.8"]]

@@ -1,6 +1,7 @@
 (ns yamdb.main
   "Entry point for app. Fns for starting/stopping web server."
   (:require
+    [clojure.tools.nrepl.server :as nrepl]
     [yamdb.web :as web]
     [compojure.core :refer [defroutes GET]]
     [ring.adapter.jetty :refer [run-jetty]]
@@ -11,43 +12,44 @@
 
 (set! *warn-on-reflection* true)
 
-(defonce server (ref nil))
+(defonce nrepl-server (nrepl/start-server :port 7888 :bind "127.0.0.1"))
+(defonce web-server (ref nil))
 
-(defn config-server
+(defn config-web-server
   "Access to the server instance before it is started.  Returns nil."
   [^Server s]
   (.setStopAtShutdown s true))
 
-(defn start-server
+(defn start-web-server
   "If not already running, start the embedded web server and run the given
   (compojure) app.  Does nothing if server already running.
 
-  Usage: (start-server #'my-app)            <-- good for repl
-         (start-server #'my-app :join true) <-- good for main"
+  Usage: (start-web-server #'my-app)            <-- good for repl
+         (start-web-server #'my-app :join true) <-- good for main"
   [app-var & {:keys [join] :or {join false}}]
   (dosync
-    (when-not (ensure server)
-      (ref-set server (run-jetty app-var
-                                 {:port 3000
-                                  :join? join
-                                  :configurator config-server})))))
+    (when-not (ensure web-server)
+      (ref-set web-server (run-jetty app-var
+                                     {:port 3000
+                                      :join? join
+                                      :configurator config-web-server})))))
 
-(defn stop-server
-  "Initiate orderly shutdown of the server.  Blocks until done.  If already
+(defn stop-web-server
+  "Initiate orderly shutdown of the web server.  Blocks until done.  If already
   shutdown, does nothing."
   []
   (dosync
-    (when-let [^Server s (ensure server)]
+    (when-let [^Server s (ensure web-server)]
       (.stop s)
-      (ref-set server nil))))
+      (ref-set web-server nil))))
 
 (defn -main [& args]
-  ; start the server and block forever
-  (start-server web/app :join true)
+  ; start the web server and block forever
+  (start-web-server web/app :join true)
   (println "bye"))
 
 (comment
-  (start-server #'web/app)
-  (stop-server)
+  (start-web-server #'web/app)
+  (stop-web-server)
 )
 
